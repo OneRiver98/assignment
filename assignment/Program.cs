@@ -15,11 +15,11 @@ namespace Text
     {
         public class Player
         {
-            public int Level {  get; set; }
-            public string Jop {  get; set; }
+            public int Level {  get; }
+            public string Jop {  get; }
             public int Atk { get; set; }
             public int Df { get; set; }
-            public int Health { get; set; }
+            public int Health { get; }
             public int Gold { get; set; }
             public Bag Bag { get; set; }
             public int EquipAtk { get; set; }
@@ -49,7 +49,7 @@ namespace Text
                 EqUupDf = 0;
             }
 
-            public void Equip(int a) // 장비장착 칸에서 장비를 선택 하면 알맞게 장착 되게 했습니다.
+            public void Equip(int a) 
             {
                 if (Bag.items[a].ItemType == "공격력")
                 {
@@ -61,11 +61,12 @@ namespace Text
                     Df += Bag.items[a].Value;
                     EqUupDf += Bag.items[a].Value;
                 }
+                Console.WriteLine();
             }
         }
 
 
-        public class Bag // 상점에서 구매 하면 추가 되게 했습니다.
+        public class Bag 
         {
             public List<Item> items = new List<Item>();
             public void AddItem(Item item)
@@ -104,7 +105,7 @@ namespace Text
                 Install = install;
                 equip = itemName;
             }
-            public void explan()  // 처음에 썻던 함수들인데 중요 하지 않습니다.. 나중에 작업 하면서 함수들 썻던 거 지운 게 많습니다.
+            public void explan()
             {
                 Console.WriteLine("- " + count + " " + ItemName + " " + ItemType + "+" + Value + " " + Explanation + " " + Price);
             }
@@ -113,7 +114,7 @@ namespace Text
                 Console.WriteLine(equip + "   | " + ItemType + "+" + Value + "     | " + Explanation  );
             }
 
-            public void Equip() // 장비장착 칸에서 선택 되면 이 함수가 실행 되게 했습니다. 장비창에 표시 되는 것은 Name이 아닌 equip 입니다.
+            public void Equip() 
             {
                 equip = $" [E]{ItemName}";
             }
@@ -152,82 +153,50 @@ namespace Text
         }
 
 
-            public class Choice // "매 화면에서 선택 하라"는 기능을 클래스로 만들었습니다.
-            {
-            public int select(int num)  // 오버로딩입니다. 변수 하나 입력해서 번호 선택이 한 칸인 경우에 실행 하게 합니다.
+        public class Choice
+        {
+            public int select(int num) 
             {
                 Console.WriteLine("원하시는 행동을 입력 해주세요.");
                 Console.Write(">> ");
-                int a;
-                bool roop = true;
-
-                do
+                while(true)
                 {
-                    bool t = int.TryParse(Console.ReadLine(), out a);
-                    if (t)
+                    if (int.TryParse(Console.ReadLine(), out int a) && num == a)
                     {
-                        if (num == a)
-                        {
-                            roop = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("올바른 값을 입력 해주세요,");
-                            Console.Write(">> ");
-                        }
+
+                        return a;
                     }
-                    else
-                    {
-                        Console.WriteLine("숫자를 입력 해주세요,");
-                        Console.Write(">> ");
-                    }
+                    Console.WriteLine("올바른 값을 입력 해주세요,");
+                    Console.Write(">> ");
                 }
-                while (roop);
-                return a;
             }
 
-            public int select(int min, int max) // 오버로딩입니다. 최소값과 최댓값을 넣어서 ex) 1~3의 값만 반환 합니다.
+            public int select(int min, int max)
             {
                 Console.WriteLine("원하시는 행동을 입력 해주세요.");
                 Console.Write(">> ");
-                int a;
-                bool roop = true;
-                do
+                while(true)
                 {
-                    bool t = int.TryParse(Console.ReadLine(), out a);
-                    if (t)
+                    if (int.TryParse(Console.ReadLine(), out int a) && min <= a && max >= a)
                     {
-                        if (min <= a && max >= a)
-                        {
-                            roop = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("올바른 값을 입력 해주세요,");
-                            Console.Write(">> ");
-                        }
+                        return a;
                     }
-                    else
-                    {
-                        Console.WriteLine("숫자를 입력 해주세요,");
-                        Console.Write(">> ");
-                    }
+                    Console.WriteLine("올바른 값을 입력 해주세요,");
+                    Console.Write(">> ");
                 }
-                while (roop);
-                return a;
             }
         }
 
 
-        public abstract class Screen : Choice // Choice 클래스를 상속 받아 추상 클래스로 만들고 번호선택만이 아닌 다른 것도 호출 되게 했습니다.
+        public abstract class Screen : Choice 
         {
             public abstract int screenSelect();
         }
 
 
-        public class Home : Screen  // Screen을 호출 받아 추상클래스를 사용 할 수 있게 했습니다. 
+        public class Home : Screen  
         {
-            public override int screenSelect() // 오버라이딩으로 추상 클래스를 사용 한 겁니다. 콘솔문구가 먼저 나오고 후에 번호선택 기능이 나오게 한겁니다.
+            public override int screenSelect() 
             {
                 ment();
                 return select(1, 3);
@@ -262,7 +231,7 @@ namespace Text
                 Console.WriteLine();
                 Console.WriteLine("아이템 목록\n");
 
-                foreach (Item item in playerItems)   // 장비목록 출력
+                foreach (Item item in playerItems)
                 {
                     item.explan2();
                 }
@@ -272,11 +241,11 @@ namespace Text
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine();
 
-                int a = select(0, 1); // 선택 기능 함수를 여기서도 활용 했습니다. 
+                int a = select(0, 1); 
                 if(a >0)
                 {
-                    bool roop = true;
-                    while (roop)
+                    bool loop = true;
+                    while (loop)
                     {
                         Console.Clear();
                         Console.WriteLine("인벤토리");
@@ -299,7 +268,7 @@ namespace Text
                         }
                         else
                             {
-                                roop = false;
+                                loop = false;
                             }
                         }
                 }
@@ -318,7 +287,7 @@ namespace Text
                 string equipAtk = "";
                 string equipDf = "";
 
-                if (Player.Instance.EquipAtk > 0)       // 장착을 했으면 표시가 되게 하고 장착이 없으면 "" 표시 되게 했습니다. 기준은 공격력이 0이냐 아니냐
+                if (Player.Instance.EquipAtk > 0)      
                 {
                     int a = Player.Instance.EquipAtk;
                     equipAtk = "(+"+a.ToString()+")";
@@ -412,8 +381,8 @@ namespace Text
                     Console.WriteLine();
                     Console.WriteLine("0. 나가기");
                     Console.WriteLine();
-                    bool roop = true;
-                    while (roop)
+                    bool loop = true;
+                    while (loop)
                     {
                         int storeSelect = select(0, itemList.items.Count);
                         if (0 < storeSelect)
@@ -456,7 +425,7 @@ namespace Text
                         }
                         else
                         {
-                            roop = false;
+                            loop = false;
                         }
                     }
                 }
